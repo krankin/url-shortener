@@ -8,19 +8,7 @@ defmodule Shorty.Sites do
 
   alias Shorty.Sites.Link
 
-  @doc """
-  Returns the list of links.
-
-  ## Examples
-
-      iex> list_links()
-      [%Link{}, ...]
-
-  """
-  def list_links do
-    Repo.all(Link)
-  end
-
+ 
   @doc """
   Gets a single link.
 
@@ -35,7 +23,7 @@ defmodule Shorty.Sites do
       ** (Ecto.NoResultsError)
 
   """
-  def get_link!(id), do: Repo.get!(Link, id)
+  def get_link!(slug), do: Repo.get_by!(Link, slug: slug)
 
   @doc """
   Creates a link.
@@ -74,22 +62,6 @@ defmodule Shorty.Sites do
   end
 
   @doc """
-  Deletes a link.
-
-  ## Examples
-
-      iex> delete_link(link)
-      {:ok, %Link{}}
-
-      iex> delete_link(link)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_link(%Link{} = link) do
-    Repo.delete(link)
-  end
-
-  @doc """
   Returns an `%Ecto.Changeset{}` for tracking link changes.
 
   ## Examples
@@ -98,7 +70,7 @@ defmodule Shorty.Sites do
       %Ecto.Changeset{data: %Link{}}
 
   """
-  def change_link(%Link{} = link, attrs \\ %{}) do
-    Link.changeset(link, attrs)
-  end
+  # def change_link(%Link{} = link, attrs \\ %{}) do
+  #   Link.changeset(link, attrs)
+  # end
 end
