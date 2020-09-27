@@ -10,20 +10,9 @@ defmodule Shorty.Sites do
 
  
   @doc """
-  Gets a single link.
-
-  Raises `Ecto.NoResultsError` if the Link does not exist.
-
-  ## Examples
-
-      iex> get_link!(123)
-      %Link{}
-
-      iex> get_link!(456)
-      ** (Ecto.NoResultsError)
-
+  Gets a single link.  
   """
-  def get_link!(slug), do: Repo.get_by!(Link, slug: slug)
+  def get_link(slug), do: Repo.get_by(Link, slug: slug)
 
   @doc """
   Creates a link.

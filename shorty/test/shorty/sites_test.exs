@@ -20,9 +20,9 @@ defmodule Shorty.SitesTest do
     end
 
 
-    test "get_link!/1 returns the link with given id" do
+    test "get_link/1 returns the link with given id" do
       link = link_fixture()
-      assert Sites.get_link!(link.slug) == link
+      assert Sites.get_link(link.slug) == link
     end
 
     test "create_link/1 with valid data creates a link" do

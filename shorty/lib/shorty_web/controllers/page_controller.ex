@@ -7,7 +7,15 @@ defmodule ShortyWeb.PageController do
   end
 
   def find(conn, params = %{"slug" => slug} ) do
-    site = Sites.get_link!(slug)    
-    redirect(conn, external: site.url)
+     case Sites.get_link(slug)   do
+       nil -> 
+        conn
+        |> put_status(:not_found)
+        |> put_view(ShortyWeb.ErrorView)
+        |> render(:"404")
+       site ->
+        redirect(conn, external: site.url)
+     end
   end
+
 end
