@@ -8,7 +8,7 @@ defmodule ShortyWeb.PageController do
     |> render("index.html", changeset:  Shorty.Sites.Link.changeset(%Shorty.Sites.Link{}, %{}))
   end
 
-  def find(conn, params = %{"slug" => slug} ) do
+  def find(conn, %{"slug" => slug} ) do
      case Sites.get_link(slug)   do
        nil -> 
         conn
@@ -20,15 +20,23 @@ defmodule ShortyWeb.PageController do
      end
   end
 
-  def create(conn, params = %{"link" => link_changeset} ) do    
-    slug = Helpers.SlugGenerator.generate(7);
+  def create(conn, %{"link" => link_changeset} ) do 
 
-    {:ok, link }= 
-    Map.put(link_changeset, "slug", slug) |> Sites.create_link()
+    if Helpers.UrlValidator.is_valid?(Map.get(link_changeset, "url")) do   
+      slug = Helpers.SlugGenerator.generate(7);
 
-    conn
-    |> put_flash(:info, "Congratulations on your new link:")
-    |> assign(:newlink, ShortyWeb.Endpoint.url <> "/" <> link.slug)
-    |> render("index.html", changeset: Shorty.Sites.Link.changeset(%Shorty.Sites.Link{}, %{}))
+      {:ok, link }= 
+      Map.put(link_changeset, "slug", slug) |> Sites.create_link()
+
+      conn
+      |> put_flash(:info, "Congratulations on your new link:")
+      |> assign(:newlink, ShortyWeb.Endpoint.url <> "/" <> link.slug)
+      |> render("index.html", changeset: Shorty.Sites.Link.changeset(%Shorty.Sites.Link{}, %{}))
+    else
+      conn
+      |> put_flash(:error, "That URL is not valid, try again")
+      |> assign(:newlink, nil)
+      |> render("index.html", changeset: Shorty.Sites.Link.changeset(%Shorty.Sites.Link{}, link_changeset))
+    end
   end
 end

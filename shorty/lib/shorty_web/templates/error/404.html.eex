@@ -1,0 +1,2 @@
+<h1> Oops! Shorty couldn't find that link</h1>
+<h2> go <%= link("here", to: "/")%> to make your own </h2>

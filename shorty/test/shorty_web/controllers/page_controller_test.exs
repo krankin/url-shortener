@@ -20,20 +20,24 @@ defmodule ShortyWeb.PageControllerTest do
 
   test "GET /slug", %{conn: conn} do
     link = generate_link()
-    conn = get(conn, "/ABCSDF")
+    conn = get(conn, link.slug)
     assert html_response(conn, 302) =~ "redirected"
     assert redirected_to(conn, 302) =~ "https://www.google.com/search?q=url+shortener&oq=google+u&aqs=chrome.0.69i59j69i60l3j0j69i57.1069j0j7&sourceid=chrome&ie=UTF-8"
   end
 
 
-  test "GET /slug returns 404 on unknown slug", %{conn: conn} do
-    link = generate_link()
+  test "GET /slug returns 404 on unknown slug", %{conn: conn} do   
     conn = get(conn, "/Unknown")
-    assert html_response(conn, 404) =~ "Not Found"    
+    assert html_response(conn, 404) =~ "Oops!"    
   end
 
   test "POST /", %{conn: conn} do
     conn = post(conn, "/",%{"link" =>  %{url: "https://news.ycombinator.com"}})
-    assert html_response(conn, 200) =~ "Your shorty is: "
+    assert html_response(conn, 200) =~ "Your shorty is:"
+  end
+
+  test "POST / returns error if url isn't valid", %{conn: conn} do
+    conn = post(conn, "/",%{"link" =>  %{url: "INV@L^DUR~~L"}})
+    assert html_response(conn, 200) =~ "That URL is not valid, try again"
   end
 end
