@@ -14,5 +14,6 @@ defmodule ShortyWeb.Router do
 
     get "/", PageController, :index
     get "/:slug", PageController, :find
+    post "/", PageController, :create
   end
 end

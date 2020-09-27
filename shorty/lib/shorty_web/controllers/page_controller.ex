@@ -3,7 +3,9 @@ defmodule ShortyWeb.PageController do
   alias Shorty.Sites
 
   def index(conn, _params) do
-    render(conn, "index.html")
+    conn
+    |> assign(:newlink, nil)
+    |> render("index.html", changeset:  Shorty.Sites.Link.changeset(%Shorty.Sites.Link{}, %{}))
   end
 
   def find(conn, params = %{"slug" => slug} ) do
@@ -18,4 +20,15 @@ defmodule ShortyWeb.PageController do
      end
   end
 
+  def create(conn, params = %{"link" => link_changeset} ) do    
+    slug = Helpers.SlugGenerator.generate(7);
+
+    {:ok, link }= 
+    Map.put(link_changeset, "slug", slug) |> Sites.create_link()
+
+    conn
+    |> put_flash(:info, "Congratulations on your new link:")
+    |> assign(:newlink, ShortyWeb.Endpoint.url <> "/" <> link.slug)
+    |> render("index.html", changeset: Shorty.Sites.Link.changeset(%Shorty.Sites.Link{}, %{}))
+  end
 end
