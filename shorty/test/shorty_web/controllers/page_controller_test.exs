@@ -32,8 +32,23 @@ defmodule ShortyWeb.PageControllerTest do
   end
 
   test "POST /", %{conn: conn} do
-    conn = post(conn, "/",%{"link" =>  %{url: "https://news.ycombinator.com"}})
-    assert html_response(conn, 200) =~ "Your shorty is:"
+    
+    conn =
+    conn 
+    |> Plug.Conn.put_req_header("referer", "http://short.ly/")
+    |> post("/",%{"link" =>  %{url: "https://news.ycombinator.com"}})
+
+    assert html_response(conn, 200) =~ "Your shorty is:"   
+  end
+
+    test "POST / links to appropriate referer", %{conn: conn} do
+    
+    conn =
+    conn 
+    |> Plug.Conn.put_req_header("referer", "http://short.ly/")
+    |> post("/",%{"link" =>  %{url: "https://news.ycombinator.com"}})
+
+    assert html_response(conn, 200) =~ "http://short.ly/"   
   end
 
   test "POST / returns error if url isn't valid", %{conn: conn} do

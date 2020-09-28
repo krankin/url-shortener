@@ -25,12 +25,14 @@ defmodule ShortyWeb.PageController do
     if Helpers.UrlValidator.is_valid?(Map.get(link_changeset, "url")) do   
       slug = Helpers.SlugGenerator.generate(7);
 
-      {:ok, link }= 
+      {:ok, link } = 
       Map.put(link_changeset, "slug", slug) |> Sites.create_link()
 
+      [referer] = get_req_header(conn, "referer")
+      
       conn
       |> put_flash(:info, "Congratulations on your new link:")
-      |> assign(:newlink, ShortyWeb.Endpoint.url <> "/" <> link.slug)
+      |> assign(:newlink, referer <> link.slug)
       |> render("index.html", changeset: Shorty.Sites.Link.changeset(%Shorty.Sites.Link{}, %{}))
     else
       conn
