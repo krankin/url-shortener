@@ -16,5 +16,6 @@ defmodule Shorty.Sites.Link do
     link
     |> cast(attrs, [:slug, :url])
     |> validate_required([:slug, :url])
+    |> unique_constraint(:slug)
   end
 end

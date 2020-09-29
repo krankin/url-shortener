@@ -23,17 +23,24 @@ defmodule ShortyWeb.PageController do
   def create(conn, %{"link" => link_changeset} ) do 
 
     if Helpers.UrlValidator.is_valid?(Map.get(link_changeset, "url")) do   
-      slug = Helpers.SlugGenerator.generate(7);
 
-      {:ok, link } = 
-      Map.put(link_changeset, "slug", slug) |> Sites.create_link()
-
-      [referer] = get_req_header(conn, "referer")
+      slug = Helpers.SlugGenerator.generate(Application.get_env(:shorty, :slug_length, 7));            
+      link_changeset = Map.put(link_changeset, "slug", slug) 
       
-      conn
-      |> put_flash(:info, "Congratulations on your new link:")
-      |> assign(:newlink, referer <> link.slug)
-      |> render("index.html", changeset: Shorty.Sites.Link.changeset(%Shorty.Sites.Link{}, %{}))
+      case Sites.create_link(link_changeset) do
+        {:ok, link} -> 
+          [referer] = get_req_header(conn, "referer")
+        
+          conn
+          |> put_flash(:info, "Congratulations on your new link:")
+          |> assign(:newlink, referer <> link.slug)
+          |> render("index.html", changeset: Shorty.Sites.Link.changeset(%Shorty.Sites.Link{}, %{}))
+        {:error, changeset} -> 
+          conn
+          |> put_flash(:error, "Error creating link:") 
+          |> assign(:newlink, nil)       
+          |> render("index.html", changeset: changeset)
+      end
     else
       conn
       |> put_flash(:error, "That URL is not valid, try again")

@@ -9,6 +9,9 @@ use Mix.Config
 
 config :shorty,
   ecto_repos: [Shorty.Repo]
+  
+config :shorty, 
+  slug_length: System.get_env("SLUG_LENGTH") || 7
 
 # Configures the endpoint
 config :shorty, ShortyWeb.Endpoint,

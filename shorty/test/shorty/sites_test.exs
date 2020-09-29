@@ -34,5 +34,11 @@ defmodule Shorty.SitesTest do
     test "create_link/1 with invalid data returns error changeset" do
       assert {:error, %Ecto.Changeset{}} = Sites.create_link(@invalid_attrs)
     end
+
+    test "slugs must be unique" do
+     {:ok, _} = Sites.create_link(@valid_attrs)
+     assert {:error, _} = Sites.create_link(@valid_attrs)          
+    end
+
   end
 end
