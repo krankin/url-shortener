@@ -6,7 +6,9 @@ Assumes:
   -Base machine is some flavor of linux. 
   -Docker and Docker-compose are installed on base machine. 
   
-It should be as easy as cloning the repo and running `make setup`. Depending on permissions you make have to `sudo make (setup|test|server)`
+It should be as easy as cloning the repo and running `make test`. 
+The docker compose files will download deps for each environment and build assets for development (server).
+Depending on permissions you make have to `sudo make (test|server)`
 
 
 ------------

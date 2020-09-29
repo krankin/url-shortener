@@ -11,18 +11,17 @@ services:
     volumes:
       - 'pgdata:/var/lib/postgresql/data'
   web:
-    build: .
+    image: 'bitwalker/alpine-elixir-phoenix:latest'
     depends_on:
       - db
     environment:
-      MIX_ENV: dev
+      MIX_ENV: test
       DATABASE_HOSTNAME: db
-    env_file:
-      - .env
+    working_dir: /app
     ports:
       - '4000:4000'
     volumes:
       - ./shorty:/app
-    command: mix test
+    command: bash -c "mix deps.get && mix test"
 volumes:
   pgdata:

@@ -7,7 +7,7 @@
 # anything else that needs to happen before your server is started
 # for the first time
 setup:
-	docker-compose build
+	echo "Nothing to be done.. run make test or make server"
 
 # `make server` will be used after `make setup` in order to start
 # an http server process that listens on any unreserved port
