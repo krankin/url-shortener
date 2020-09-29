@@ -1,0 +1,66 @@
+-----------
+Running the system
+-----------
+
+Assumes: 
+  -Base machine is some flavor of linux. 
+  -Docker and Docker-compose are installed on base machine. 
+  
+It should be as easy as cloning the repo and running `make setup`. Depending on permissions you make have to `sudo make (setup|test|server)`
+
+
+------------
+Total time: 
+------------
+A little over 4 hours.
+ 
+This partly due to my schedule over the last few days and not having the ability to commit a dedicated block of time to the entire assessment. 
+Also, I'm counting all activities in that block of time, not just things related strictly to writing the code. As you know, there's time involved in thinking of a solution, getting things set up, testing my "deployment" strategy, etc.   
+
+-----------
+Approach:
+-----------
+Keep it simple, I tried to build a small working prototye that can be improved upon later. 
+As you'll see when I discuss limitations of my current implementation, this is what I've done. 
+
+----------
+Details:
+----------
+
+A major component of implementing this revolves around generating slugs. 
+The basic premise of creating the slugs is to do a random sequence of URL safe characters X digits long. 
+We have 64 characters for use to build our slugs and we need enough of them to handle the amount of requests we will receive. 
+
+Some simple math based on our performance requirements: 
+
+5 requests per second
+ 5 * 60 300/min 
+ 300 * 60 = 18000/hr 
+ 18000 * 24 = 432,000 /day
+ 
+if we pick a random length (7): 
+ 64 possible characters, 7 digits  = ~4 trillion possible combinations.  
+
+This works out to about 
+27k years before we run out of 7 digit slugs sssuming we had some way of guaranteeing we minimized the chances of generating a value we've already used.
+
+------------
+Limitations:
+------------
+What if we generate a duplicate slug? 
+
+This is not well addressed by my current solution and is a known limitation. The idea though is it can be swapped out later with something more robust. 
+There are ways we can handle this, including the following:  
+1) start generating numbers of a different length. 
+2) Instead of using a random number for slug generation we could generating via a sequential number.
+
+What if reading/writing links becomes slow?
+ I don't know what our read/write ratio will be and I'm hesitant to make assumptions.  
+ Future versions should keep track of requests for links, especially as our number of links grows. 
+ We could implement some sort of caching if need be to serve those reads faster, but at 5 requests per second I'd say we're good with querying the database for now. 
+   
+What about the UI? 
+I kept this simple to stay within the alloted time. As you'll see it's simple server-side rendered html. 
+I did this for a number of reasons:
+  1) Speed - no large javascript bundles to download
+  2) Testing - Add functionality with JS would have meant building client side tests beyond the integration tests I have now. I chose not to do that given the time constraints. But, I really wanted to add a "copy to clipboard" feature.
