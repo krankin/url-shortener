@@ -5,6 +5,7 @@ Running the system
 Assumes: 
   -Base machine is some flavor of linux. 
   -Docker and Docker-compose are installed on base machine. 
+  -Uses Port 4000 for http
   
 It should be as easy as cloning the repo and running `make test`. 
 The docker compose files will download deps for each environment and build assets for development (server).
