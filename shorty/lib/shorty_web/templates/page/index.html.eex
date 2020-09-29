@@ -14,8 +14,9 @@
 </section>
 <%= if @newlink do%>
   <div class="phx-hero">
-    <h2 class="text-right">Your shorty is:</h2> 
-    <h2 class="text-right"><%=link(@newlink, to: @newlink) %></h2>
+    <p>Original: <%= @oldlink%> </p>
+    <h2>Your shorty is:</h2> 
+    <h2><%=link(@newlink, to: @newlink) %></h2>
   </div>
 <% end %>
 

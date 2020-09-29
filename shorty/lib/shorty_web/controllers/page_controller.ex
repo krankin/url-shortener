@@ -34,6 +34,7 @@ defmodule ShortyWeb.PageController do
           conn
           |> put_flash(:info, "Congratulations on your new link:")
           |> assign(:newlink, referer <> link.slug)
+          |> assign(:oldlink, link.url)
           |> render("index.html", changeset: Shorty.Sites.Link.changeset(%Shorty.Sites.Link{}, %{}))
         {:error, changeset} -> 
           conn
